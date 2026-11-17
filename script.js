@@ -3,8 +3,28 @@ const content = document.querySelector('#dialogContent');
 const close = document.querySelector('.close');
 const gallery = document.querySelector('#gallery');
 const milestoneTimeline = document.querySelector('#milestoneTimeline');
-const assetVersion = '100days-photo-fix-1';
+const assetVersion = 'everyday-1';
 const assetUrl = (path) => `${path}?v=${assetVersion}`;
+
+// 第 1 天 = 2026-04-18
+const START_DATE = new Date(2026, 3, 18);
+const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+
+function daysTogether(now = new Date()) {
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diff = Math.floor((today - START_DATE) / 86400000);
+  return { days: diff + 1, now: today };
+}
+
+function renderDaysTogether() {
+  const { days, now } = daysTogether();
+  const range = document.querySelector('#dayRange');
+  if (range) {
+    range.textContent = `${MONTHS[START_DATE.getMonth()]} ${START_DATE.getDate()} — ${MONTHS[now.getMonth()]} ${now.getDate()} · EVERYDAY`;
+  }
+  const count = document.querySelector('#dayCount');
+  if (count) count.textContent = `第 ${days} 天`;
+}
 
 function renderMilestones(events) {
   const milestones = events.filter((event) => event.day);
@@ -55,7 +75,9 @@ function renderGallery(events) {
   }));
 }
 
-fetch('assets/data/gallery.json?v=100days-gallery-fix-2')
+renderDaysTogether();
+
+fetch('assets/data/gallery.json?v=everyday-1')
   .then((response) => response.json())
   .then(({ events, total }) => {
     const introCopy = document.querySelector('.intro > p:last-child');
@@ -91,7 +113,7 @@ music.addEventListener('click', async () => {
   if (playing) {
     player.pause();
     playing = false;
-    music.innerHTML = '♪ <span>第几个一百天</span>';
+    music.innerHTML = '♪ <span>日常的歌</span>';
     return;
   }
   try {
