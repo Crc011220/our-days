@@ -3,7 +3,7 @@ const content = document.querySelector('#dialogContent');
 const close = document.querySelector('.close');
 const gallery = document.querySelector('#gallery');
 const milestoneTimeline = document.querySelector('#milestoneTimeline');
-const assetVersion = 'everyday-1';
+const assetVersion = 'everyday-2';
 const assetUrl = (path) => `${path}?v=${assetVersion}`;
 
 // 第 1 天 = 2026-04-18
@@ -77,7 +77,7 @@ function renderGallery(events) {
 
 renderDaysTogether();
 
-fetch('assets/data/gallery.json?v=everyday-1')
+fetch('assets/data/gallery.json?v=everyday-2')
   .then((response) => response.json())
   .then(({ events, total }) => {
     const introCopy = document.querySelector('.intro > p:last-child');
