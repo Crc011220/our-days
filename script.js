@@ -3,8 +3,9 @@ const content = document.querySelector('#dialogContent');
 const close = document.querySelector('.close');
 const gallery = document.querySelector('#gallery');
 const milestoneTimeline = document.querySelector('#milestoneTimeline');
-const assetVersion = 'everyday-2';
+const assetVersion = 'everyday-3';
 const assetUrl = (path) => `${path}?v=${assetVersion}`;
+const variantUrl = (path, prefix) => assetUrl(path.replace(/\/photo-(\d+)\.jpg$/, `/${prefix}-$1.jpg`));
 
 // 第 1 天 = 2026-04-18
 const START_DATE = new Date(2026, 3, 18);
@@ -53,7 +54,7 @@ function renderMilestones(events) {
 function renderGallery(events) {
   gallery.innerHTML = events.map((event, index) => `
     <article class="memory-card ${index === 0 ? 'featured' : ''}" data-index="${index}">
-      <div class="card-image"><img loading="lazy" src="${assetUrl(event.images[0])}" alt="${event.title}" /></div>
+      <div class="card-image"><img loading="lazy" decoding="async" src="${variantUrl(event.images[0], 'thumb')}" alt="${event.title}" /></div>
       <div class="card-content">
         ${event.location ? `<p class="date">${event.location}</p>` : ''}
         <h3>${event.title}</h3>
@@ -69,7 +70,7 @@ function renderGallery(events) {
       <h2 class="modal-title">${event.title}</h2>
       ${event.location ? `<p class="modal-note">${event.location}</p>` : ''}
       ${event.caption ? `<p class="modal-note">${event.caption}</p>` : ''}
-      <div class="gallery">${event.images.map((src) => `<img loading="lazy" src="${assetUrl(src)}" alt="${event.title}">`).join('')}</div>
+      <div class="gallery">${event.images.map((src) => `<img loading="lazy" decoding="async" src="${variantUrl(src, 'mid')}" alt="${event.title}">`).join('')}</div>
     `;
     dialog.showModal();
   }));
@@ -77,7 +78,7 @@ function renderGallery(events) {
 
 renderDaysTogether();
 
-fetch('assets/data/gallery.json?v=everyday-2')
+fetch('assets/data/gallery.json?v=everyday-3')
   .then((response) => response.json())
   .then(({ events, total }) => {
     const introCopy = document.querySelector('.intro > p:last-child');
